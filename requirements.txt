@@ -1,5 +1,7 @@
 streamlit
 ultralytics
 easyocr
-gtts
+gTTS
 opencv-python-headless
+Pillow
+numpy
