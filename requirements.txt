@@ -5,4 +5,3 @@ gTTS
 opencv-python-headless
 Pillow
 numpy
-tensorflow
