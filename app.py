@@ -48,10 +48,15 @@ st.markdown("""
 # --- 2. MODEL LOADING (CACHED) ---
 @st.cache_resource
 def load_vision_models():
-    # Load YOLOv8 model - ensure 'best_yolo_model.pt' is in the same directory
-    yolo = YOLO("best_yolo_model.pt")
-    # Initialize EasyOCR
-    reader = easyocr.Reader(['en'], gpu=False) # Set gpu=True if you have CUDA configured
+    # Model file check
+    model_path = "best_yolo_model.pt"
+    if not os.path.exists(model_path):
+        st.error(f"Error: {model_path} file nahi mili repo mein!")
+        st.stop()
+        
+    yolo = YOLO(model_path)
+    # EasyOCR initialization (CPU mode for Streamlit Cloud)
+    reader = easyocr.Reader(['en'], gpu=False) 
     return yolo, reader
 
 # Header section
@@ -66,18 +71,21 @@ col1, col2 = st.columns([1, 1], gap="large")
 
 with col1:
     st.markdown("<div class='status-box'><h3>📸 Visual Input</h3></div>", unsafe_allow_html=True)
+    
+    # Optional: camera_input bhi use kar sakte ho real-time feel ke liye
     uploaded_file = st.file_uploader("Upload an image (Scene, Text, or Currency)", type=['jpg', 'jpeg', 'png'])
     
     if uploaded_file:
         raw_image = Image.open(uploaded_file)
-        st.image(raw_image, caption="Environment View", use_container_width=True)
+        # Updated: width="stretch" used instead of deprecated use_container_width
+        st.image(raw_image, caption="Environment View", width="stretch")
 
 # --- 4. CORE PROCESSING ENGINE ---
 with col2:
     st.markdown("<div class='status-box'><h3>🧠 AI Analysis</h3></div>", unsafe_allow_html=True)
     
     if uploaded_file and st.button("EXECUTE SCENE ANALYSIS"):
-        # Convert PIL to OpenCV format
+        # Image conversion
         frame = np.array(raw_image)
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         display_frame = frame.copy()
@@ -96,7 +104,7 @@ with col2:
                 label = yolo_model.names[cls_idx].lower()
                 conf = float(box.conf[0])
                 
-                # --- CASE A: TEXT BLOCKS ---
+                # CASE A: TEXT DETECTION
                 if "text" in label:
                     h, w, _ = frame.shape
                     padding = 10
@@ -110,36 +118,33 @@ with col2:
                             all_detections.append(f"📄 **Text Identified:** {extracted_text}")
                             speech_text += f"Reading text: {extracted_text}. "
                             cv2.rectangle(display_frame, (x1, y1), (x2, y2), (74, 144, 226), 4)
-                            cv2.putText(display_frame, "TEXT", (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (74, 144, 226), 2)
                 
-                # --- CASE B: CURRENCY DETECTION ---
+                # CASE B: CURRENCY DETECTION
                 elif any(den in label for den in ["10", "20", "50", "100", "200", "500"]):
                     currency_info = f"{label} Rupee Note"
                     all_detections.append(f"💰 **Currency:** {currency_info} ({conf:.1%} confidence)")
                     speech_text += f"Detected a {currency_info}. "
                     cv2.rectangle(display_frame, (x1, y1), (x2, y2), (46, 204, 113), 4)
-                    cv2.putText(display_frame, "MONEY", (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (46, 204, 113), 2)
 
-            # Display Annotated Image
-            st.image(cv2.cvtColor(display_frame, cv2.COLOR_BGR2RGB), caption="Processed Analysis", use_container_width=True)
+            # Processed output display
+            st.image(cv2.cvtColor(display_frame, cv2.COLOR_BGR2RGB), caption="Processed Analysis", width="stretch")
             
-            # Show Findings UI
             if all_detections:
                 st.write("---")
                 for item in all_detections:
                     st.markdown(f"<div class='detection-card'>{item}</div>", unsafe_allow_html=True)
                 
-                # Generate Audio via Tempfile to prevent file-lock errors
+                # Audio Feedback
                 if speech_text:
                     with st.spinner("Generating Audio Feedback..."):
                         clean_audio_text = speech_text.replace("**", "")
                         tts = gTTS(text=clean_audio_text, lang='en')
                         
+                        # Temp file storage for Streamlit stability
                         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
                             tts.save(fp.name)
                             st.audio(fp.name, format="audio/mp3", autoplay=True)
             else:
-                st.warning("Objects detected but no meaningful text or currency could be parsed.")
+                st.warning("Detection toh hui par meaningful text ya currency nahi mili.")
         else:
-            st.error("The AI couldn't identify any specific objects. Please try a clearer image.")
-
+            st.error("AI ko scene mein kuch samajh nahi aaya. Please clear image try karein.")
