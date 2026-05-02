@@ -56,7 +56,7 @@ def load_vision_models():
 
 # Header section
 st.markdown("<h1 style='text-align: center;'>🕶️ Smart Assistive Glasses AI</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #a0aec0;'>Thapar University Innovation Lab Project • Powered by YOLOv8 & EasyOCR</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #a0aec0;'>Thapar University Innovation Lab Project</p>", unsafe_allow_html=True)
 
 with st.spinner("Initializing AI Core..."):
     yolo_model, ocr_reader = load_vision_models()
