@@ -3,6 +3,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![Framework](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white)](https://streamlit.io/)
 [![Model](https://img.shields.io/badge/YOLOv8-Ultralytics-orange)](https://ultralytics.com/)
+[![Live Demo](https://img.shields.io/badge/Live-App-green?style=flat&logo=streamlit)](https://smartglassesforvisually-impaired-dbmnsfmdg7wkagqlucvawt.streamlit.app/)
 
 An AI-powered assistive vision system designed for the visually impaired. This project implements a cascaded deep learning pipeline that localizes objects of interest (Text and Currency) and provides real-time auditory feedback.
 
@@ -15,6 +16,12 @@ The system operates on a first-principles approach to scene understanding:
 1.  **Localization (YOLOv8):** Scans the environment to detect `text_block` and `currency` denominations.
 2.  **Recognition (EasyOCR):** The detected regions are cropped and pre-processed. To handle small or pixelated text (like on billboards), we apply an **Upscaling factor of 1.5x** with **Cubic Interpolation**.
 3.  **Auditory Feedback (gTTS):** Converts the processed text into natural-sounding speech, providing an intuitive interface for the user.
+
+---
+
+## 🔗 Live Access
+You can interact with the live application here:
+👉 [**Launch SmartVision AI App**](https://smartglassesforvisually-impaired-dbmnsfmdg7wkagqlucvawt.streamlit.app/)
 
 ---
 
