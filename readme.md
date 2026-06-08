@@ -7,6 +7,17 @@
 
 An AI-powered assistive vision system designed for the visually impaired. This project implements a cascaded deep learning pipeline that localizes objects of interest (Text and Currency) and provides real-time auditory feedback.
 
+## 📊 Model Performance
+
+The custom YOLO detection model achieved:
+
+- **Precision:** 96.2%
+- **Recall:** 95.9%
+- **mAP@50:** 99.1%
+- **mAP@50-95:** 94.6%
+
+The model was trained on a custom Roboflow dataset containing text regions and Indian currency notes, expanded from 450+ manually annotated images to 1,350+ images through data augmentation. While the validation set was relatively small, the results indicate strong detection and localization performance for the target classes.
+
 ---
 
 ## 🚀 The Core Pipeline
