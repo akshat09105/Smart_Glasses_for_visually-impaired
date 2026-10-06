@@ -44,7 +44,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.markdown("<h1 style='text-align: center;'>🕶️ Smart Assistive Glasses AI</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #a0aec0;'>Thapar University Innovation Lab Project</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #a0aec0;'>University Innovation Lab Project</p>", unsafe_allow_html=True)
 
 # --- 2. MODEL LOADING (CACHED) ---
 @st.cache_resource
@@ -63,7 +63,7 @@ col1, col2 = st.columns([1, 1], gap="large")
 
 with col1:
     st.markdown("<div class='status-box'><h3>📸 Input Frame</h3></div>", unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("Image upload karo (Book page, signage, ya notes)", type=['jpg', 'jpeg', 'png'])
+    uploaded_file = st.file_uploader("Upload image", type=['jpg', 'jpeg', 'png'])
     
     if uploaded_file:
         raw_image = Image.open(uploaded_file)
@@ -79,7 +79,7 @@ with col2:
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         
         # YOLO Detection
-        with st.spinner("Objects dhoond raha hoon..."):
+        with st.spinner("Objects detection"):
             results = yolo_model.predict(frame, conf=0.20) # Lower conf for better text recall
             boxes = results[0].boxes
         
@@ -139,4 +139,4 @@ with col2:
             st.error("text is not cleared to model. trying something else")
 
 # --- FOOTER ---
-st.markdown("<br><hr><p style='text-align: center; color: #718096;'>Thapar Visionary Assistive Technology v1.0</p>", unsafe_allow_html=True)
+st.markdown("<br><hr><p style='text-align: center; color: #718096;'>Visionary Assistive Technology v1.0</p>", unsafe_allow_html=True)
