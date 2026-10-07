@@ -44,7 +44,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.markdown("<h1 style='text-align: center;'>🕶️ Smart Assistive Glasses AI</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #a0aec0;'>University Innovation Lab Project</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #a0aec0;'>University Innovation group 35 Project</p>", unsafe_allow_html=True)
 
 # --- 2. MODEL LOADING (CACHED) ---
 @st.cache_resource
